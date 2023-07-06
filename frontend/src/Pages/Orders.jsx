@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Tbody, Tr, Td, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Select } from '@chakra-ui/react';
+import { Button, Table, Tbody, Tr, Td, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Select, useToast } from '@chakra-ui/react';
+import Navbar from '../Components/Navbar';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -7,12 +8,14 @@ const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [update,setUpdate] = useState(false);
   const isAdmin = JSON.parse(localStorage.getItem('role')) === 'admin';
+  const customer_email=JSON.parse(localStorage.getItem('email'))
+  const toast=useToast();
 
   // Fetch orders data from backend
   useEffect(() => {
     fetch('http://127.0.0.1:5000/orders')
       .then(response => response.json())
-      .then(data => setOrders(data.orders))
+      .then(data => setOrders(data.data.orders))
       .catch(error => console.log(error));
   }, [update]);
 
@@ -29,6 +32,12 @@ const Orders = () => {
       .then(data => {
         console.log(data.message);
         // Refresh orders data after status update
+        toast({
+          title: 'Status Updated !!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        });
         setUpdate(!update)
         setShowModal(false)
         fetch('/orders')
@@ -51,7 +60,9 @@ const Orders = () => {
   };
 
   return (
-    <div>
+    <>
+    <Navbar/>
+    <div style={{margin:'10px'}}>
       <Table variant="striped">
         <Tbody>
           {orders.map(order => (
@@ -95,6 +106,7 @@ const Orders = () => {
         </ModalContent>
       </Modal>
     </div>
+    </>
   );
 };
 

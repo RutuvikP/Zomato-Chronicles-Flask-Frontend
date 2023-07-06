@@ -10,6 +10,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../Components/Navbar';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +30,8 @@ const Login = () => {
 
       const data = await response.json();
       console.log(data);
-      localStorage.setItem('role',JSON.stringify(data.role))
+      localStorage.setItem('role',JSON.stringify(data.data.role))
+      localStorage.setItem('email',JSON.stringify(data.data.email))
 
       if (data.message) {
         // Login success
@@ -57,8 +59,11 @@ const Login = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <Box
       maxW="md"
+      mt={'10px'}
       mx="auto"
       py={8}
       px={4}
@@ -93,6 +98,7 @@ const Login = () => {
         </Button>
       </Stack>
     </Box>
+    </>
   );
 };
 

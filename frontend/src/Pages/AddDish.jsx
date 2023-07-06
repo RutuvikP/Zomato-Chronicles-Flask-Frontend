@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Button, FormControl, FormLabel, Input, Checkbox, Stack, useToast } from '@chakra-ui/react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../Components/Navbar';
 
 const AddDish = () => {
   
   const [customerName, setCustomerName] = useState('');
   const [selectedDishes, setSelectedDishes] = useState([]);
   const [availableDishes, setAvailableDishes] = useState([]);
+  const navigate=useNavigate();
   const toast=useToast();
 
   useEffect(() => {
     // Fetch available dishes from the backend
     axios.get('http://127.0.0.1:5000/')
       .then(response => {
-        const dishes = response.data.menu;
-        const availableDishes = dishes.filter(dish => dish.availability);
+        const dishes = response.data.data;
+        console.log(dishes);
+        const availableDishes = dishes.menu.filter(dish => dish.availability=="true");
         setAvailableDishes(availableDishes);
       })
       .catch(error => {
@@ -28,6 +32,7 @@ const AddDish = () => {
     const dishIds = selectedDishes.map(dish => dish.id);
     const orderData = {
       customer_name: customerName,
+      customer_email: JSON.parse(localStorage.getItem('email')),
       dish_ids: dishIds.join(',')
     };
 
@@ -36,6 +41,7 @@ const AddDish = () => {
         console.log(response.data.message);
         const orderId = response.data.order_id;
         // Redirect the user to the order details page
+        navigate('/orders')
         toast({
           title: 'Order Placed !!',
           status: 'success',
@@ -58,6 +64,8 @@ const AddDish = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div style={{margin:'auto', width:'30%'}}>
       <FormControl>
         <FormLabel>Customer Name</FormLabel>
@@ -87,6 +95,7 @@ const AddDish = () => {
         Place Order
       </Button>
     </div>
+    </>
   );
 };
 

@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../Components/Navbar';
 
 const Signup = () => {
   
@@ -53,7 +54,7 @@ const Signup = () => {
           isClosable: true,
         });
         // Redirect the user to the desired page after successful signup
-        navigate('/login')
+        navigate('/')
       })
       .catch((error) => {
         // Handle any errors that occur during the signup process
@@ -69,6 +70,8 @@ const Signup = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <Box
       mx="auto"
       my={8}
@@ -124,6 +127,7 @@ const Signup = () => {
         </VStack>
       </form>
     </Box>
+    </>
   );
 };
 

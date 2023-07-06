@@ -5,16 +5,15 @@ import AddDish from '../Pages/AddDish';
 import Orders from '../Pages/Orders';
 import Login from '../Pages/Login';
 import Signup from '../Pages/Signup';
-import Home from '../Pages/Home';
+import PrivateRoute from './PrivateRoute';
 
 const AllRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home/>} />
       <Route path="/menu" element={<Menu/>} />
-      <Route path="/placeorder" element={<AddDish/>} />
-      <Route path="/orders" element={<Orders/>} />
-      <Route path="/login" element={<Login/>} />
+      <Route path="/placeorder" element={<PrivateRoute><AddDish/></PrivateRoute>} />
+      <Route path="/orders" element={<PrivateRoute><Orders/></PrivateRoute>} />
+      <Route path="/" element={<Login/>} />
       <Route path="/signup" element={<Signup/>} />
     </Routes>
   );

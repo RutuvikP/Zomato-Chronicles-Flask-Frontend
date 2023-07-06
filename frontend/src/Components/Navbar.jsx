@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -13,11 +13,17 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure();
   const [isMobile, setIsMobile] = useState(false);
+  const role=JSON.parse(localStorage.getItem('role'));
 
   // Check if the current screen width is mobile
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768);
   };
+
+  const handlelogout=()=>{
+    localStorage.clear();
+    return <Navigate to={'/'}/>
+  }
 
   // Add event listener for window resize
   React.useEffect(() => {
@@ -25,7 +31,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  },[]);
 
   return (
     <Flex
@@ -59,20 +65,19 @@ const Navbar = () => {
               justify="flex-end"
             >
               <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
-                <Link to="/">Home</Link>
-              </Box>
-              <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
                 <Link to="/menu">Menu</Link>
               </Box>
               <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
                 <Link to="/orders">Orders</Link>
               </Box>
-              <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
-                <Link to="/login">Login</Link>
-              </Box>
-              <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
+              {!role?<Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
+                <Link to="/">Login</Link>
+              </Box>:<Box onClick={handlelogout} as="li" mx={{ base: '0.5rem', md: '1rem' }}>
+                <Link to="/">Logout</Link>
+              </Box>}
+              {!role?<Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
                 <Link to="/signup">Signup</Link>
-              </Box>
+              </Box>:""}
             </Flex>
           </Collapse>
         </>
@@ -85,20 +90,19 @@ const Navbar = () => {
           justify="flex-end"
         >
           <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
-            <Link to="/">Home</Link>
-          </Box>
-          <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
             <Link to="/menu">Menu</Link>
           </Box>
           <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
             <Link to="/orders">Orders</Link>
           </Box>
-          <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
-            <Link to="/login">Login</Link>
-          </Box>
-          <Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
-            <Link to="/signup">Signup</Link>
-          </Box>
+          {!role?<Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
+                <Link to="/">Login</Link>
+          </Box>:<Box onClick={handlelogout} as="li" mx={{ base: '0.5rem', md: '1rem' }}>
+                <Link to="/">Logout</Link>
+          </Box>}
+          {!role?<Box as="li" mx={{ base: '0.5rem', md: '1rem' }}>
+                <Link to="/signup">Signup</Link>
+          </Box>:""}
         </Flex>
       )}
     </Flex>

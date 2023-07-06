@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../Components/Navbar';
 
 const Menu = () => {
   const [showAddDishModal, setShowAddDishModal] = useState(false);
@@ -44,7 +45,7 @@ const Menu = () => {
         const response = await fetch('http://127.0.0.1:5000/');
         const data = await response.json();
         console.log(data);
-        setDishes(data.menu);
+        setDishes(data.data.menu);
       } catch (error) {
         console.error('Error fetching dishes:', error);
       }
@@ -170,7 +171,7 @@ const Menu = () => {
   };
 
   // Check if the user is an admin
-  const isAdmin = JSON.parse(localStorage.getItem('role')) == 'admin';
+  const isAdmin = JSON.parse(localStorage.getItem('role')) == 'admin' || false
 
   // Render dish cards
   const renderDishCards = () => {
@@ -191,7 +192,7 @@ const Menu = () => {
           {dish.name}
         </Text>
         <Text>Price: $ {dish.price}</Text>
-        <Text>Availability: {dish.availability=="true" ? 'YES' : 'NO'}</Text>
+        <Text>Available: {dish.availability=="true" ? 'YES' : 'NO'}</Text>
         {isAdmin && (
             <>
           <Button mt={4} colorScheme="blue" onClick={() => handleEdit(dish)}>
@@ -215,17 +216,19 @@ const Menu = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <Box>
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
         Menu
       </Text>
       {isAdmin && (
-        <Button onClick={() => setShowAddDishModal(true)} colorScheme="blue" mr={4}>
+        <Button onClick={() => setShowAddDishModal(true)} colorScheme="blue" m={4} mr={4}>
           Add New Dish
         </Button>
       )}
       {!isAdmin && (
-        <Button onClick={handlePlaceOrder} colorScheme="green" mr={4}>
+        <Button onClick={handlePlaceOrder} colorScheme="green" m={4} mr={4}>
           Place Order
         </Button>
       )}
@@ -325,6 +328,7 @@ const Menu = () => {
         </Modal>
       )}
     </Box>
+    </>
   );
 };
 
